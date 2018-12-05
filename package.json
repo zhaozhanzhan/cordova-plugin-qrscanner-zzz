@@ -18,11 +18,11 @@
         "#USER",
         "/"
     ],
-    "_resolved": "https://registry.npmjs.org/cordova-plugin-qrscanner/-/cordova-plugin-qrscanner-2.5.0.tgz",
+    "_resolved": "https://registry.npmjs.org/cordova-plugin-qrscanner/-/cordova-plugin-qrscanner-2.6.0.tgz",
     "_shasum": "",
     "_spec": "cordova-plugin-qrscanner",
     "_where": "",
-    "author": "Jason Dreyzehner",
+    "author": "zhaozhanzhan",
     "bugs": {
         "url": "https://github.com/zhaozhanzhan/cordova-plugin-qrscanner-zzz/issues"
     },
@@ -106,7 +106,7 @@
         "test:library": "npm run build && node tests/library/test.js",
         "test:windows": "cd ../cordova-plugin-test-projects/cordova-plugin-qrscanner-tests && npm run test:windows"
     },
-    "version": "2.7.1",
+    "version": "2.7.2",
     "main": "/www/www.min.js",
     "directories": {
         "test": "tests"

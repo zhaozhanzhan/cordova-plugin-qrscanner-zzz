@@ -3,10 +3,10 @@ import AVFoundation
 
 @objc(QRScanner)
 class QRScanner : CDVPlugin, AVCaptureMetadataOutputObjectsDelegate {
-    
+
     class CameraView: UIView {
         var videoPreviewLayer:AVCaptureVideoPreviewLayer?
-        
+
         func interfaceOrientationToVideoOrientation(orientation : UIInterfaceOrientation) -> AVCaptureVideoOrientation {
             switch (orientation) {
             case UIInterfaceOrientation.portrait:
@@ -29,18 +29,18 @@ class QRScanner : CDVPlugin, AVCaptureMetadataOutputObjectsDelegate {
                     layer.frame = self.bounds;
                 }
             }
-            
+
             self.videoPreviewLayer?.connection.videoOrientation = interfaceOrientationToVideoOrientation(orientation:  UIApplication.shared.statusBarOrientation);
         }
-        
-        
+
+
         func addPreviewLayer(previewLayer:AVCaptureVideoPreviewLayer?) {
             previewLayer!.videoGravity = AVLayerVideoGravityResizeAspectFill
             previewLayer!.frame = self.bounds
             self.layer.addSublayer(previewLayer!)
             self.videoPreviewLayer = previewLayer;
         }
-        
+
         func removePreviewLayer() {
             self.videoPreviewLayer!.removeFromSuperlayer()
             self.videoPreviewLayer = nil
@@ -151,7 +151,17 @@ class QRScanner : CDVPlugin, AVCaptureMetadataOutputObjectsDelegate {
                 metaOutput = AVCaptureMetadataOutput()
                 captureSession!.addOutput(metaOutput)
                 metaOutput!.setMetadataObjectsDelegate(self, queue: DispatchQueue.main)
-                metaOutput!.metadataObjectTypes = [AVMetadataObjectTypeQRCode]
+                metaOutput!.metadataObjectTypes = [
+                  AVMetadataObjectTypeUPCECode,
+                  AVMetadataObjectTypeQRCode,
+                  AVMetadataObjectTypeEAN13Code,
+                  AVMetadataObjectTypeEAN8Code,
+                  AVMetadataObjectTypeCode39Code,
+                  AVMetadataObjectTypeCode39Mod43Code,
+                  AVMetadataObjectTypeCode93Code,
+                  AVMetadataObjectTypeCode128Code,
+                  AVMetadataObjectTypePDF417Code
+                ]
                 captureVideoPreviewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
                 cameraView.addPreviewLayer(previewLayer: captureVideoPreviewLayer)
                 captureSession!.startRunning()
@@ -236,7 +246,16 @@ class QRScanner : CDVPlugin, AVCaptureMetadataOutputObjectsDelegate {
             return
         }
         let found = metadataObjects[0] as! AVMetadataMachineReadableCodeObject
-        if found.type == AVMetadataObjectTypeQRCode && found.stringValue != nil {
+        if found.type == AVMetadataObjectTypeUPCECode ||
+            found.type == AVMetadataObjectTypeQRCode ||
+            found.type == AVMetadataObjectTypeEAN13Code ||
+            found.type == AVMetadataObjectTypeEAN8Code ||
+            found.type == AVMetadataObjectTypeCode39Code ||
+            found.type == AVMetadataObjectTypeCode39Mod43Code ||
+            found.type == AVMetadataObjectTypeCode93Code ||
+            found.type == AVMetadataObjectTypeCode128Code ||
+            found.type == AVMetadataObjectTypePDF417Code
+            && found.stringValue != nil {
             scanning = false
             let pluginResult = CDVPluginResult(status: CDVCommandStatus_OK, messageAs: found.stringValue)
             commandDelegate!.send(pluginResult, callbackId: nextScanningCommand?.callbackId!)
